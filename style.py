@@ -451,7 +451,7 @@ encode_pip = Button(window, text="Hide picture \n inside picture " ,image = pips
 decode_pip = Button(window, text="Reveal a picture \n from picture" ,image = pips2,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=6,row=3,rowspan=1,columnspan=1)
 
 # encode_audio = Button(window, text="Hide a Text \n inside audio " ,image = Audio_1,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=6,row=1,rowspan=1,columnspan=1,ipadx=6)
-# decode_audio = Button(window, text="Reveal a text \n from audio" ,image = Audio_2,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=6,row=3,rowspan=1,columnspan=1)
+# decode_audio2 = Button(window, text="Reveal a text \n from audio" ,image = Audio_2,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=6,row=3,rowspan=1,columnspan=1)
 
 about_us = Button(window ,image = aboutUS,compound = LEFT, fg="black",relief="raised",borderwidth=6,command= lambda: about_us(parent=window)).grid(column=3,row=6,columnspan=1, ipadx=8)
 
