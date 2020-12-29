@@ -1,7 +1,59 @@
 import cv2
-import gif as gif
 import numpy as np
 import types
+
+###################
+
+def encrypt(data,kk):
+    """
+    Input:
+         text to be encrypted
+         key of the caesar cypher
+    Output: Encrypted text
+    """
+
+    key = kk
+    key = int(key)
+    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u','v', 'w', 'x', 'y', 'z']
+    encrypted = ''
+    data = data.lower()
+    for char in data:
+        if char == " ":
+            encrypted += " "
+            continue
+        if char == "," or char == "." or char == "#" or char == ";" or char == "&":
+            continue
+        index = alphabet.index(char)
+        shifted_text = (index + key) % 26
+        encrypted += alphabet[shifted_text]
+    return encrypted
+
+
+def decrypt(encryptedMsg,kk):
+    """
+    Input:
+         text to be deccrypted
+         key of the caesar cypher
+    Output: deccrypted text
+    """
+    key = kk
+    key = int(key)
+    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u','v', 'w', 'x', 'y', 'z']
+    decrypted = ''
+    encryptedMsg = encryptedMsg.lower()
+    for char in encryptedMsg:
+        if char == " ":
+            decrypted += " "
+            continue
+        if char == "," or char == "." or char == "#" or char == ";" or char == "&":
+            continue
+        index = alphabet.index(char)
+        shifted_text = (index - key) % 26
+        decrypted += alphabet[shifted_text]
+    return decrypted
+
+########################
+
 def messege_to_binary(message):
     if type(message) == str:
         return ''.join([format(ord(i), "08b") for i in message])
@@ -12,20 +64,29 @@ def messege_to_binary(message):
     else:
         raise TypeError("Unknown Input Type")
 
+
 def encode(image, new_message):
     number_bytes = image.shape[0] * image.shape[1] * 3 // 8
+
     if len(new_message) > number_bytes:
         raise ValueError("You need a bigger Image or less data")
+
     new_message += "#####"
+
     data_index = 0
+
     binary_new_message = messege_to_binary(new_message)
+
     data_len = len(binary_new_message)
+
     for values in image:
         for pixel in values:
             r, g, b = messege_to_binary(pixel)
+
             # now we use the LSB method
             # remove last bit of every byte for all rgb's and then append new bit
             # using int to convert the binary into a number again
+
             if data_index < data_len:
                 pixel[0] = int(r[:-1] + binary_new_message[data_index], 2)
                 data_index += 1
@@ -38,8 +99,11 @@ def encode(image, new_message):
             if data_index >= data_len:
                 break
     return image
+
+
 def show_data(image):
     binary_data = ""
+
     for values in image:
         for pixel in values:
             # converting the r,g,b into binary format
@@ -47,39 +111,68 @@ def show_data(image):
             binary_data += r[-1]
             binary_data += g[-1]
             binary_data += b[-1]
+
     all_bytes = [binary_data[i:i + 8] for i in range(0, len(binary_data), 8)]
+
     # converting the bits into characters
+
     decoded_data = ""
     for byte in all_bytes:
         decoded_data += chr(int(byte, 2))
         if decoded_data[-5:] == "#####":
             break
     return decoded_data[:-5]
-def encode_text(path,mss,new_path):
-    image_name = path
-    image = cv2.imread(image_name)  # transforming image into matrix of r,g,b
+
+
+def encode_text(path,mss,new_path,key):
+    path = str(path)
+    mss = str(mss)
+    new_path = str(new_path)
+
+    image = cv2.imread(path)  # transforming image into matrix of r,g,b
+
     # print('the shape of the image is :', image.shape)
-    data = mss
+
+
+    encrypted_msg = encrypt(mss,key)
+
+
+
     # if (len(data) == 0):
     #     raise ValueError('there is no message ,, sorry  !!')
+
     file_name = new_path
-    encode_image = encode(image, data)
+    encode_image = encode(image, encrypted_msg)
     cv2.imwrite(file_name, encode_image)
-def decode_text():
-    image_name = input("Insert an image(with the extention) you want to decode:  ")
+
+
+def decode_text(path,textelement,key):
+    image_name = path
     image = cv2.imread(image_name)  # transforming image into matrix of r,g,b
+
     text = show_data(image)
-    return text
+    decrypted_msg = decrypt(text,key)
+
+    textelement.config(state=NORMAL)
+    v =textelement.get('1.0', 'end-1c')
+    if v != '':
+        textelement.delete('1.0', END)
+    textelement.insert('1.0', decrypted_msg)
+    textelement.config(state=DISABLED)
+
+
 #########################################################
+
 from tkinter import *
 from tkinter import ttk , font
 from tkinter import filedialog
-from PIL import ImageTk,Image
 import tkinter as tk
+from PIL import ImageTk,Image
 import os, shutil
+
 ##############################################
 ## functions
-img = 0
+
 ###################
 # griding
 def griding(currenttab):
@@ -97,6 +190,7 @@ def griding(currenttab):
     m11 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(column=11)
     m12 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(column=12)
     m13 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(column=13)
+
     m0 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(row=0)
     m1 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(row=1)
     m2 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(row=2)
@@ -111,50 +205,114 @@ def griding(currenttab):
     m11 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(row=11)
     m12 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(row=12)
     m13 = Label(currenttab, text="    ", font=('Bahnschrift SemiBold SemiConden', 15)).grid(row=13)
-    print('m13: ', m13)
+
+# positioning
+def center_window(element,width=300, height=200):
+
+    # get screen width and height
+    screen_width = element.winfo_screenwidth()
+    screen_height = element.winfo_screenheight()
+
+    # calculate position x and y coordinates
+    x = (screen_width/2) - (width/2)
+    y = (screen_height/2) - (height/2)
+    element.geometry('%dx%d+%d+%d' % (width, height, x, y))
+
 ##################
 
-tool = None
-
 def encode_tool(parent):
-    global tool
     parent.withdraw()
+
     tool = Toplevel()
-    tool.title("Echo-Tech")
-    tool.geometry("550x320")
-    tool.wm_iconbitmap('logo.ico')
-
+    tool.title("Hide A Message")
+    center_window(tool,width=550, height=320)
+    tool.wm_iconbitmap('./assets/logo.ico')
     griding(tool)
-    encode_label1 = Label(tool, text="Please select the file you want to encode to",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
-    pathfinder = ttk.Button(tool, text="Browse", command= lambda: fileDailog(parent=tool))
-    pathfinder.grid(column=1, row=2,sticky = W)
-    # encode_label2 = Label(tool, text="Please enter the message you want to hide",fg="gray",anchor='w').grid(column=1, row=4,columnspan=2,sticky = W)
-    # encode_entry2 = Text(tool, bg="white",wrap=WORD,height=8, width=30).grid(column=1, row=5,columnspan=4,rowspan=2,sticky = W)
-    # confirm_button = Button(tool, text="confirm", height=2, width=10, fg="black",command=(new_text == encode_entry2)).grid(column=1, row=5,columnspan=4,rowspan=2,sticky = W)
 
+    encode_label1 = Label(tool, text="Please select the file you want to encode to",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
+
+    encode_label2 = Label(tool, text="Please enter the message you want to hide",fg="gray",anchor='w')
+    encode_label2.grid(column=1, row=4,columnspan=2,sticky = W)
+
+
+    encode_entry2 = Text(tool, bg="white",wrap=WORD,height=8, width=30)
+    encode_entry2.grid(column=1, row=5,columnspan=4,rowspan=2,sticky = W)
+
+    scrollb = Scrollbar(tool, command=encode_entry2.yview)
+    scrollb.grid(column=3, row=5,rowspan=2, sticky='nse')
+    encode_entry2['yscrollcommand'] = scrollb.set
+
+    new_name = Text(tool, bg="white",height = 1, width=15)
+    new_name.grid(column=5, row=6, rowspan=1,sticky="w")
+    new_name_label = Label(tool, text="Please enter a name for the new image",fg="gray",anchor='w')
+    new_name_label.grid(column=5, row=7, columnspan=5,sticky="w")
+    value = new_name
+
+
+    pathfinder = ttk.Button(tool, text="Browse", command=lambda: fileDailog(parent=tool,big=encode_entry2,small=new_name))
+    pathfinder.grid(column=1, row=2, sticky=W)
 
     def on_closing():
         tool.destroy()
         parent.deiconify()
+
+
     tool.protocol("WM_DELETE_WINDOW", on_closing)
+
     tool.mainloop()
 ################################
 
-def fileDailog(parent):
-    global tool
-    new_text = None
+def decode_tool(parent):
+    parent.withdraw()
 
-    encode_label2 = Label(tool, text="Please enter the message you want to hide",fg="gray",anchor='w').grid(column=1, row=4,columnspan=2,sticky = W)
-    encode_entry2 = Text(tool, bg="white",wrap=WORD,height=8, width=30).grid(column=1, row=5,columnspan=4,rowspan=2,sticky = W)
-    # confirm_button = Button(tool, text="confirm", height=2, width=10, fg="black").grid(column=1, row=5,columnspan=4,rowspan=2,sticky = W, command=(new_text == encode_entry2))
+    tool = Toplevel()
+    tool.title("Reveal A Message")
+    center_window(tool,width=550, height=320)
+    tool.wm_iconbitmap('./assets/logo.ico')
+    griding(tool)
+    # tool['background'] = 'grey'
+    decode_label1 = Label(tool, text="Please select the file you want to decode from",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
 
+    decode_label2 = Label(tool, text="Here The message Will appear",fg="gray",anchor='w')
+    decode_label2.grid(column=1, row=4,columnspan=2,sticky = W)
+
+    decode_entry2 = Text(tool, bg="white",wrap=WORD,height=8, width=30,state=DISABLED)
+    decode_entry2.grid(column=1, row=5,columnspan=4,rowspan=2,sticky = W)
+
+    scrollb = Scrollbar(tool, command=decode_entry2.yview)
+    scrollb.grid(column=3, row=5,rowspan=2, sticky='nse')
+    decode_entry2['yscrollcommand'] = scrollb.set
+
+
+
+    # new_name = Text(tool, bg="white",height = 1, width=15)
+    # new_name.grid(column=5, row=6, rowspan=1,sticky="w")
+    # new_name_label = Label(tool, text="Please enter a name for the new image",fg="gray",anchor='w')
+    # new_name_label.grid(column=5, row=7, columnspan=5,sticky="w")
+    # value = new_name
+    # print('new name',value)
+    #
+
+    pathfinder = ttk.Button(tool, text="Browse", command=lambda: fileDailog2(parent=tool,big=decode_entry2))
+    pathfinder.grid(column=1, row=2, sticky=W)
+
+    def on_closing():
+        tool.destroy()
+        parent.deiconify()
+
+    tool.protocol("WM_DELETE_WINDOW", on_closing)
+    tool.mainloop()
+
+################################
+
+def fileDailog(parent,big,small):
     fileName = filedialog.askopenfilename(initialdir = "/", title="Select A File")
-    name = fileName
-    localDrive = name[0]
-    name = name[2:]
-    full_name = '/mnt/' + localDrive + name
-    # messagebox = encode_entry2.get('1.0', 'end')
-    # new_path = fileName[:fileName.rindex('/') + 1] + new_name.get("1.0", 'end-1c') + fileName[fileName.rindex('.'):]
+    # name = fileName
+    # localDrive = name[0]
+    # name = name[2:]
+    # full_name = '/mnt/' + localDrive + name
+
+
     img = ImageTk.PhotoImage(Image.open(fileName).resize((200, 200), Image.ANTIALIAS))
     parent.photo = img
     canvas = Canvas(parent, width = 200, height = 200,highlightthickness=1, highlightbackground="white")
@@ -162,135 +320,175 @@ def fileDailog(parent):
     canvas.create_image(1, 1, anchor='nw', image=img)
 
 
-    apply_button = Button(parent, text="Apply",height = 1, width = 10, fg="black",command=lambda: encode_text(path=full_name,mss=encode_entry2.get('1.0', 'end'),new_path =fileName[:fileName.rindex('/') + 1] + new_name.get("1.0", 'end-1c') + fileName[fileName.rindex('.'):])).grid(column=5, row=6, rowspan=1,columnspan=5,sticky="e")
+    def get_new():
+        return fileName[:fileName.rindex('/') + 1] + small.get('1.0', 'end-1c') + '.png'
 
-    new_name = Text(parent, bg="white",height = 1, width=15).grid(column=5, row=6, rowspan=1,sticky="w")
-    new_name_label = Label(parent, text="Please enter a name for the new image",fg="gray",anchor='w').grid(column=5, row=7, columnspan=5,sticky="w")
+    def provide():
+
+        def submit(h):
+            val1 = entry2.get('1.0', 'end-1c')
+            if val1 == "":
+                pass
+            else:
+                h.quit()
+                h.withdraw()
+
+        nav = Toplevel()
+        nav.title("Echo-Tech")
+        center_window(nav,width=200, height=70)
+
+        label2 = Label(nav, text="Please Insert a key of your choice", fg="gray", anchor='w')
+        label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
+
+        entry2 = Text(nav, bg="white", height=1, width=10)
+        entry2.grid(column=1, row=5, rowspan=2, sticky='e', padx=5, pady=2)
+
+        SubmitBtn = Button(nav, text="Submit", command=lambda:submit(nav))
+        SubmitBtn.grid(row=5, column=2, padx=5, pady=2,sticky='e')
+
+        nav.mainloop()
+
+        return entry2.get('1.0', 'end-1c')
+
+    apply_button = Button(parent, text="Apply",height = 1, width = 10, fg="black",command=lambda: encode_text(path=fileName,mss=big.get('1.0', 'end-1c'),new_path=get_new(),key=provide()))
+    apply_button.grid(column=5, row=6, rowspan=1,columnspan=5,sticky="e")
+
+
+    pathfinder_label = ttk.Label(parent, text="")
+    pathfinder_label.grid(column=1, row=3,columnspan=4,sticky = W)
+    pathfinder_label.configure(text=fileName,anchor='w')
+
+def fileDailog2(parent,big):
+    fileName = filedialog.askopenfilename(initialdir = "/", title="Select A File")
+    # name = fileName
+    # localDrive = name[0]
+    # name = name[2:]
+    # full_name = '/mnt/' + localDrive + name
+
+
+    img = ImageTk.PhotoImage(Image.open(fileName).resize((200, 200), Image.ANTIALIAS))
+    parent.photo = img
+    canvas = Canvas(parent, width = 200, height = 200,highlightthickness=1, highlightbackground="white")
+    canvas.grid(row=1, column=5,columnspan=5,rowspan=5, sticky="n")
+    canvas.create_image(1, 1, anchor='nw', image=img)
+
+    def provide():
+
+        def submit(h):
+            val1 = entry2.get('1.0', 'end-1c')
+            if val1 == "":
+                pass
+
+            else:
+                h.quit()
+                h.withdraw()
+
+        nav2 = Toplevel()
+        nav2.title("Echo-Tech")
+        center_window(nav2, width=200, height=70)
+
+        label2 = Label(nav2, text="Please Provide the secret key...", fg="gray", anchor='w')
+        label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
+
+        entry2 = Text(nav2, bg="white", height=1, width=10)
+        entry2.grid(column=1, row=5, rowspan=2, sticky='e', padx=5, pady=2)
+
+        SubmitBtn = Button(nav2, text="Submit", command=lambda: submit(nav2))
+        SubmitBtn.grid(row=5, column=2, padx=5, pady=2, sticky='e')
+
+        nav2.mainloop()
+
+        return entry2.get('1.0', 'end-1c')
+
+    apply_button = Button(parent, text="Apply",height = 1, width = 10, fg="black",command=lambda: decode_text(path=fileName,textelement=big,key=provide()))
+    apply_button.grid(column=5, row=6, rowspan=1,columnspan=5,sticky="e")
+
+
     pathfinder_label = ttk.Label(parent, text="")
     pathfinder_label.grid(column=1, row=3,columnspan=4,sticky = W)
     pathfinder_label.configure(text=fileName,anchor='w')
 
 
-
-
-
-
-
+# from winsound import *
 window=Tk()
-window.title("Echo-Tech")
-window.geometry("750x370")
-window['background']='grey'
-window.wm_iconbitmap('logo.ico')
+# play = lambda: PlaySound('./assets/pop.wav', SND_FILENAME)
 
-# window.configure(bg='blue')
-
-# ccanvas = Canvas(window,width="550",height="320")
-# ccanvas.create_image(0,0,anchor="nw")
-# monaliza = imgX.subsample(1,1)
-# background_image = tk.PhotoImage(file="t.png")
-# background_label = tk.Label(window, image=background_image )
-# background_label.place(x=0, y=0, relwidth=1, relheight=2)
-
-imgX = PhotoImage(file = r"main.png")
-img1 = PhotoImage(file = r"lock.png")
-lock = img1.subsample(10,12)
-img2 = PhotoImage(file = r"unlock.png")
-unlock = img2.subsample(10,12)
-
-
-
-encode_button = Button(window, text="Hide A Message " ,image = lock,compound = LEFT, fg="black",command= lambda: encode_tool(parent=window)).grid(column=1,row=1)
-encode_label = Label(window,text= "Press on Encode to hide \n a message of your choice in\n the media you select", fg="gray").grid(column=1,row=2)
-decode_button = Button(window, text="Reveal A Message " ,image = unlock,compound = LEFT, fg="black",command= lambda: encode_tool(parent=window)).grid(column=3,row=1)
-decode_label = Label(window,text= "Press on Decode to reveal \n a message hidden in a\n media you select\n (If it exist)", fg="gray").grid(column=3,row=2)
-label1 = Label(window,text= "Welcome To Monalisa",image = imgX,compound = BOTTOM,fg="gray",font=('Bahnschrift SemiBold SemiConden',15)).grid(column=2,row=1,rowspan=2,pady="55",padx="100")
-
-
-
-
-# bg = ImageTk.PhotoImage(file="t.png")
-# mbkLabel = Label(window, image=bg).grid(column=0,row=0)
-# ccanvas = Canvas(window,width="550",height="320")
-# ccanvas.pack(fill="both",expand="true")
-# ccanvas.create_image(0,0,image=bg,anchor="nw")
-
-# def resizer(e):
-#     global bg1, resize_bg,new_bg
-#     bg1 = Image.open("t.png")
-#     resize_bg = bg1.resize((e.width,e.height), Image.ANTIALIAS)
-#     new_bg = ImageTk.PhotoImage(resize_bg)
-#     ccanvas.create_image(0, 0, image=new_bg, anchor="nw")
-#
-#
-# window.bind('<Configure>', resizer)
-
-
-
+window['background']='black'
+window.title("@Echo-Tech")
+center_window(window,width=720, height=390)
+background_image = tk.PhotoImage(file="./assets/3.png")
+background_label = tk.Label(window, image=background_image )
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
 # griding(window)
+window.wm_iconbitmap('./assets/logo.ico')
+# window.resizable(False,False)
+monaliza = PhotoImage(file = r"./assets/main.png")
+about = PhotoImage(file = r"./assets/aboutus.png")
+aboutUS = about.subsample(3,5)
+img1 = PhotoImage(file = r"./assets/text0.png")
+lock = img1.subsample(9,12)
+img2 = PhotoImage(file = r"./assets/text1.png")
+unlock = img2.subsample(9,12)
+pip1 = PhotoImage(file = r"./assets/pip1.png")
+pips1 = pip1.subsample(11,10)
+pip2 = PhotoImage(file = r"./assets/pip2.png")
+pips2 = pip2.subsample(11,10)
+img3 = PhotoImage(file = r"./assets/audio_lock.png")
+Audio_1 = img3.subsample(11,10)
+img4 = PhotoImage(file = r"./assets/audio_unlock.png")
+Audio_2 = img4.subsample(11,10)
+
+
+label1 = Label(window,text= "Welcome To Monalisa",image = monaliza,compound = BOTTOM,fg="black",relief="raised",borderwidth=5,font=('Bahnschrift SemiBold SemiConden',16)).grid(column=2,row=0,rowspan=6,columnspan=3,pady="25",padx="55")
+
+encode_button = Button(window, text="Hide A Message \n inside image" ,image = lock,compound = LEFT, fg="black",relief="raised",borderwidth=7,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=1,row=1,rowspan=1,columnspan=1)
+# encode_label = Label(window,text= "Press here to hide \n a message of your choice in\n the media you select",fg="black",font='Helvetica 9',relief="sunken",highlightthickness=0,borderwidth=10).grid(column=1,row=2)
+
+decode_button = Button(window, text="Reveal A Hidden \n Message" ,image = unlock,compound = LEFT, fg="black",relief="raised",borderwidth=7,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=1,row=3,rowspan=1,columnspan=1,padx=14)
+# decode_label = Label(window,text= "Press here to reveal \n a message hidden in a\n media you select",fg="black",font='Helvetica 9',relief="sunken",highlightthickness=0,borderwidth=10).grid(column=1,row=4,rowspan=1,columnspan=1,padx=45)
+
+encode_pip = Button(window, text="Hide picture \n inside picture " ,image = pips1,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=6,row=1,rowspan=1,columnspan=1,ipadx=6)
+decode_pip = Button(window, text="Reveal a picture \n from picture" ,image = pips2,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=6,row=3,rowspan=1,columnspan=1)
+
+# encode_audio = Button(window, text="Hide a Text \n inside audio " ,image = Audio_1,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=6,row=1,rowspan=1,columnspan=1,ipadx=6)
+# decode_audio = Button(window, text="Reveal a text \n from audio" ,image = Audio_2,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=6,row=3,rowspan=1,columnspan=1)
+
+about_us = Button(window ,image = aboutUS,compound = LEFT, fg="black",relief="raised",borderwidth=6,command= lambda: about_us(parent=window)).grid(column=3,row=6,columnspan=1, ipadx=8)
+
+
+def about_us(parent):
+    parent.withdraw()
+    level = Toplevel()
+    level.title("About Us")
+    center_window(level,width=825, height=380)
+    level.wm_iconbitmap('./assets/logo.ico')
+    # griding(level)
+    level['background'] = 'grey'
+    Omar = PhotoImage(file=r"./assets/omarzain.png")
+    omar_x = Omar.subsample(3, 3)
+    Diana = PhotoImage(file=r"./assets/diana.png")
+    diana_x = Diana.subsample(3, 3)
+    Hadi = PhotoImage(file=r"./assets/hadi.png")
+    hadi_x = Hadi.subsample(3, 3)
+    Aya = PhotoImage(file=r"./assets/aya.png")
+    aya_x = Aya.subsample(3, 3)
+
+
+    omar_pic = Label(level,text= "Omar Zain \n I'm a Software Developer",image = omar_x,relief="raised",borderwidth=9,compound = TOP, fg="black").grid(column=1,row=1, padx="8",pady=40)
+    diana_pic = Label(level,text= "Diana Alshafie\n I'm a Software Developer",image = diana_x,relief="raised",borderwidth=9,compound = TOP, fg="black").grid(column=2,row=1, padx="8",pady=40)
+    hadi_pic = Label(level,text= "Hadi Aji \n I'm a Software Developer",image = hadi_x,compound = TOP, fg="black",relief="raised",borderwidth=9).grid(column=3,row=1, padx="8",pady=40)
+    aya_pic = Label(level,text= "Aya Rashed \n I'm a Software Developer",image = aya_x,compound = TOP, fg="black",relief="raised",borderwidth=9).grid(column=4,row=1, padx="8",pady=40)
+    Echo_Tech = Label(level,text= "Echo Tech Team",font='Helvetica 25 bold', fg="black").grid(column=2,row=2,rowspan="20",columnspan=2)
+
+    def on_closing():
+        level.destroy()
+        parent.deiconify()
+
+    level.protocol("WM_DELETE_WINDOW", on_closing)
+    level.mainloop()
+
+
+
 window.mainloop()
 
 
-# import tkinter
-#
-# ssw = tkinter.Tk()
-#
-# def six():
-#     toplvl = tkinter.Toplevel() #created Toplevel widger
-#     photo = tkinter.PhotoImage(file = 'test2.gif')
-#     lbl = tkinter.Label(toplvl ,image = photo)
-#     lbl.image = photo #keeping a reference in this line
-#     lbl.grid(row=0, column=0)
-#
-# def base():
-#     la = tkinter.Button(ssw,text = 'yes',command=six)
-#     la.grid(row=0, column=0) #specifying row and column values is much better
-#
-# base()
-#
-# ssw.mainloop()
-
-# import tkinter as tk
-# from PIL import Image, ImageTk
-# from itertools import count
-#
-# class ImageLabel(tk.Label):
-#     """a label that displays images, and plays them if they are gifs"""
-#     def load(self, im):
-#         if isinstance(im, str):
-#             im = Image.open(im)
-#         self.loc = 0
-#         self.frames = []
-#
-#         try:
-#             for i in count(1):
-#                 self.frames.append(ImageTk.PhotoImage(im.copy()))
-#                 im.seek(i)
-#         except EOFError:
-#             pass
-#
-#         try:
-#             self.delay = im.info['duration']
-#         except:
-#             self.delay = 100
-#
-#         if len(self.frames) == 1:
-#             self.config(image=self.frames[0])
-#         else:
-#             self.next_frame()
-#
-#     def unload(self):
-#         self.config(image="")
-#         self.frames = None
-#
-#     def next_frame(self):
-#         if self.frames:
-#             self.loc += 1
-#             self.loc %= len(self.frames)
-#             self.config(image=self.frames[self.loc])
-#             self.after(self.delay, self.next_frame)
-#
-# root = tk.Tk()
-# lbl = ImageLabel(root)
-# lbl.pack()
-# lbl.load('7.gif')
-# root.mainloop()
