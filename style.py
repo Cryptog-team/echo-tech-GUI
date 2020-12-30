@@ -415,45 +415,57 @@ window=Tk()
 
 window['background']='black'
 window.title("@Echo-Tech")
-center_window(window,width=720, height=390)
-background_image = tk.PhotoImage(file="./assets/3.png")
-background_label = tk.Label(window, image=background_image )
-background_label.place(x=0, y=0, relwidth=1, relheight=1)
-# griding(window)
+center_window(window,width=920, height=500)
 window.wm_iconbitmap('./assets/logo.ico')
+im = "./assets/bg1.png"
+
+# background_image = ImageTk.PhotoImage(Image.open(im).resize((850, 460), Image.ANTIALIAS))
+# background_label = tk.Label(window, image=background_image )
+# background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+mycanvas = tk.Canvas(window, width = 970, height = 500)
+imagez = ImageTk.PhotoImage(file = im)
+mycanvas.create_image(0, 0, image = imagez,anchor = NW)
+mycanvas.create_rectangle(0, 0, 100, 40)
+mycanvas.grid(column=0,row=0,columnspan=13,rowspan=13)
+
+
 # window.resizable(False,False)
-monaliza = PhotoImage(file = r"./assets/main.png")
+# monaliza = PhotoImage(file = r"./assets/main.png")
+
 about = PhotoImage(file = r"./assets/aboutus.png")
-aboutUS = about.subsample(3,5)
+aboutUS = about.subsample(5,7)
 img1 = PhotoImage(file = r"./assets/text0.png")
 lock = img1.subsample(9,12)
 img2 = PhotoImage(file = r"./assets/text1.png")
 unlock = img2.subsample(9,12)
 pip1 = PhotoImage(file = r"./assets/pip1.png")
-pips1 = pip1.subsample(11,10)
+pips1 = pip1.subsample(8,9)
 pip2 = PhotoImage(file = r"./assets/pip2.png")
-pips2 = pip2.subsample(11,10)
+pips2 = pip2.subsample(8,9)
 img3 = PhotoImage(file = r"./assets/audio_lock.png")
-Audio_1 = img3.subsample(11,10)
+Audio_1 = img3.subsample(7,12)
 img4 = PhotoImage(file = r"./assets/audio_unlock.png")
-Audio_2 = img4.subsample(11,10)
+Audio_2 = img4.subsample(7,12)
 
 
-label1 = Label(window,text= "Welcome To Monalisa",image = monaliza,compound = BOTTOM,fg="black",relief="raised",borderwidth=5,font=('Bahnschrift SemiBold SemiConden',16)).grid(column=2,row=0,rowspan=6,columnspan=3,pady="25",padx="55")
+# label1 = Label(window,text= "Welcome To Monalisa",fg="black",borderwidth=5,font=('Bahnschrift SemiBold SemiConden',16)).grid(column=2,row=1)
 
-encode_button = Button(window, text="Hide A Message \n inside image" ,image = lock,compound = LEFT, fg="black",relief="raised",borderwidth=7,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=1,row=1,rowspan=1,columnspan=1)
+encode_button = Button(window, text="Hide A Message \n inside image" ,image = lock,compound = LEFT, fg="black",relief="flat",borderwidth=5,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=1,row=2)
 # encode_label = Label(window,text= "Press here to hide \n a message of your choice in\n the media you select",fg="black",font='Helvetica 9',relief="sunken",highlightthickness=0,borderwidth=10).grid(column=1,row=2)
 
-decode_button = Button(window, text="Reveal A Hidden \n Message" ,image = unlock,compound = LEFT, fg="black",relief="raised",borderwidth=7,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=1,row=3,rowspan=1,columnspan=1,padx=14)
+decode_button = Button(window, text="Reveal A Hidden \n Message" ,image = unlock,compound = LEFT, fg="black",relief="flat",borderwidth=5,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=3,row=2)
 # decode_label = Label(window,text= "Press here to reveal \n a message hidden in a\n media you select",fg="black",font='Helvetica 9',relief="sunken",highlightthickness=0,borderwidth=10).grid(column=1,row=4,rowspan=1,columnspan=1,padx=45)
 
-encode_pip = Button(window, text="Hide picture \n inside picture " ,image = pips1,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=6,row=1,rowspan=1,columnspan=1,ipadx=6)
-decode_pip = Button(window, text="Reveal a picture \n from picture" ,image = pips2,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=6,row=3,rowspan=1,columnspan=1)
+encode_audio = Button(window, text="Hide a Text \n inside audio " ,image = Audio_1,compound = LEFT, fg="black",relief="flat",borderwidth=5,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=1,row=3,pady=40)
+decode_audio2 = Button(window, text="Reveal a text \n from audio" ,image = Audio_2,compound = LEFT, fg="black",relief="flat",borderwidth=5,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=3,row=3,pady=40)
 
-# encode_audio = Button(window, text="Hide a Text \n inside audio " ,image = Audio_1,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=6,row=1,rowspan=1,columnspan=1,ipadx=6)
-# decode_audio2 = Button(window, text="Reveal a text \n from audio" ,image = Audio_2,compound = LEFT, fg="black",relief="raised",borderwidth=9,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=6,row=3,rowspan=1,columnspan=1)
+encode_pip = Button(window, text="Hide picture \n inside picture " ,image = pips1,compound = LEFT, fg="black",relief="flat",borderwidth=5,font='Helvetica 9 bold',command= lambda: encode_tool(parent=window)).grid(column=1,row=5)
+decode_pip = Button(window, text="Reveal a picture \n from picture" ,image = pips2,compound = LEFT, fg="black",relief="flat",borderwidth=3,font='Helvetica 9 bold',command= lambda: decode_tool(parent=window)).grid(column=3,row=5)
 
-about_us = Button(window ,image = aboutUS,compound = LEFT, fg="black",relief="raised",borderwidth=6,command= lambda: about_us(parent=window)).grid(column=3,row=6,columnspan=1, ipadx=8)
+
+
+about_us = Button(window ,image = aboutUS,compound = LEFT, fg="black",relief="flat",borderwidth=6,command= lambda: about_us(parent=window)).grid(column=1,row=10,columnspan=1, ipadx=8)
 
 
 def about_us(parent):
@@ -463,6 +475,7 @@ def about_us(parent):
     center_window(level,width=825, height=380)
     level.wm_iconbitmap('./assets/logo.ico')
     # griding(level)
+
     level['background'] = 'grey'
     Omar = PhotoImage(file=r"./assets/omarzain.png")
     omar_x = Omar.subsample(3, 3)
