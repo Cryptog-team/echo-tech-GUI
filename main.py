@@ -540,8 +540,7 @@ def decrypt_image(parent,im1,new_path):
                     img1[i][j][l] = int(v2, 2)
                     img2[i][j][l] = int(v3, 2)
                     # These are two images produced from
-        # the encrypted image
-        # cv2.imwrite('pic2_re.png', img1)
+
         cv2.imwrite(new_path, img2)
 
 
