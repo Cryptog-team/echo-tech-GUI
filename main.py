@@ -13,6 +13,9 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
+
+
+
 def send_email(filename,r_email,file_path):
     sender="echotech2022@gmail.com"  #sender gmail address
     reciever = r_email  #reciver gmail address
@@ -43,24 +46,25 @@ def encrypt(data,kk):
          key of the caesar cypher
     Output: Encrypted text
     """
-
     key = kk
-    key = int(key)
-    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u','v', 'w', 'x', 'y', 'z']
+    key=int(key)
+    alphabet=['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    symbols_num =['!','@','#','$','%','^','&','*','(',')','_','-','+', '=', ',',"'",'\n', '.','/', '?', '{', '}', '[', ']',  '~' , '|', '1', '2', '3', '4', '5', '6', '7', '8', '9','0']
     encrypted = ''
     data = data.lower()
     for char in data:
-        if char == " ":
-            encrypted += " "
-            continue
-        if char == "," or char == "." or char == "#" or char == ";" or char == "&":
+        if char == " " :
+              encrypted += " "
+              continue
+        if char in symbols_num:
+            encrypted += char
             continue
         index = alphabet.index(char)
         shifted_text = (index + key) % 26
         encrypted += alphabet[shifted_text]
     return encrypted
 
-def decrypt(encryptedMsg,kk):
+def decrypt(encryptedMsg, kk):
     """
     Input:
          text to be deccrypted
@@ -69,14 +73,18 @@ def decrypt(encryptedMsg,kk):
     """
     key = kk
     key = int(key)
-    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u','v', 'w', 'x', 'y', 'z']
+    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+                'v', 'w', 'x', 'y', 'z']
+    symbols_num = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', ',', "'", '\n', '.', '/', '?',
+                   '{', '}', '[', ']', '~', '|', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
     decrypted = ''
     encryptedMsg = encryptedMsg.lower()
     for char in encryptedMsg:
         if char == " ":
             decrypted += " "
             continue
-        if char == "," or char == "." or char == "#" or char == ";" or char == "&":
+        if char in symbols_num:
+            decrypted += char
             continue
         index = alphabet.index(char)
         shifted_text = (index - key) % 26
@@ -190,7 +198,7 @@ def encode_text(path,mss,new_path,key):
         nav.title("Echo-Tech")
         center_window(nav,width=225, height=80)
 
-        label2 = Label(nav, text="Please the resiver email address", fg="gray", anchor='w')
+        label2 = Label(nav, text="Enter the reciver email address", fg="gray", anchor='w')
         label2.grid(column=2, row=4, columnspan=4, sticky='we', padx=5, pady=2)
 
         entry2 = Entry(nav, bg="white", width=35)
@@ -219,7 +227,16 @@ def decode_text(path,textelement,key):
     # Starting the mixer
     mixer.init()
     # Loading the song
-    mixer.music.load("test.mp3")
+    mazika = 0
+
+    if random.randint(1, 3) == 1:
+        mazika = "test.mp3"
+    if random.randint(1, 3) == 2:
+        mazika = "test2.mp3"
+    if random.randint(1, 3) == 3:
+        mazika = "test3.mp3"
+
+    mixer.music.load(mazika)
     # Setting the volume
     mixer.music.set_volume(0.1)
     # Start playing the song
@@ -230,7 +247,7 @@ def decode_text(path,textelement,key):
     nav4.title("Echo-Tech")
     center_window(nav4, width=240, height=80)
 
-    label2 = Label(nav4, text="please wait..processing", fg="gray", anchor='w')
+    label2 = Label(nav4, text="Please wait..processing", fg="gray", anchor='w')
     label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
 
     def l():
@@ -309,7 +326,7 @@ def encode_audio(path,mss,new_path,key):
         nav.title("Echo-Tech")
         center_window(nav,width=225, height=80)
 
-        label2 = Label(nav, text="Please the resiver email address", fg="gray", anchor='w')
+        label2 = Label(nav, text="Enter the reciver email address", fg="gray", anchor='w')
         label2.grid(column=2, row=4, columnspan=4, sticky='we', padx=5, pady=2)
 
         entry2 = Entry(nav, bg="white", width=35)
@@ -337,7 +354,16 @@ def decode_audio(path,textelement,key):
     # Starting the mixer
     mixer.init()
     # Loading the song
-    mixer.music.load("test.mp3")
+    mazika = 0
+
+    if random.randint(1, 3) == 1:
+        mazika = "test.mp3"
+    if random.randint(1, 3) == 2:
+        mazika = "test2.mp3"
+    if random.randint(1, 3) == 3:
+        mazika = "test3.mp3"
+
+    mixer.music.load(mazika)
     # Setting the volume
     mixer.music.set_volume(0.1)
     # Start playing the song
@@ -347,7 +373,7 @@ def decode_audio(path,textelement,key):
     nav4.title("Echo-Tech")
     center_window(nav4, width=240, height=80)
 
-    label2 = Label(nav4, text="please wait..processing", fg="gray", anchor='w')
+    label2 = Label(nav4, text="Please wait..processing", fg="gray", anchor='w')
     label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
 
     def l():
@@ -387,7 +413,16 @@ def encrypt_image(parent,im1,im2,new_path):
     # Starting the mixer
     mixer.init()
     # Loading the song
-    mixer.music.load("test.mp3")
+    mazika = 0
+
+    if random.randint(1, 3) == 1:
+        mazika = "test.mp3"
+    if random.randint(1, 3) == 2:
+        mazika = "test2.mp3"
+    if random.randint(1, 3) == 3:
+        mazika = "test3.mp3"
+
+    mixer.music.load(mazika)
     # Setting the volume
     mixer.music.set_volume(0.1)
     # Start playing the song
@@ -397,7 +432,7 @@ def encrypt_image(parent,im1,im2,new_path):
     nav4.title("Echo-Tech")
     center_window(nav4, width=240, height=80)
 
-    label2 = Label(nav4, text="please wait..processing", fg="gray", anchor='w')
+    label2 = Label(nav4, text="Please wait..processing", fg="gray", anchor='w')
     label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
 
     def l():
@@ -472,7 +507,7 @@ def encrypt_image(parent,im1,im2,new_path):
             nav.title("Echo-Tech")
             center_window(nav, width=225, height=80)
 
-            label2 = Label(nav, text="Please the resiver email address", fg="gray", anchor='w')
+            label2 = Label(nav, text="Enter the reciver email address", fg="gray", anchor='w')
             label2.grid(column=2, row=4, columnspan=4, sticky='we', padx=5, pady=2)
 
             entry2 = Entry(nav, bg="white", width=35)
@@ -506,7 +541,16 @@ def decrypt_image(parent,im1,new_path):
     # Starting the mixer
     mixer.init()
     # Loading the song
-    mixer.music.load("test.mp3")
+    mazika = 0
+
+    if random.randint(1, 3) == 1:
+        mazika = "test.mp3"
+    if random.randint(1, 3) == 2:
+        mazika = "test2.mp3"
+    if random.randint(1, 3) == 3:
+        mazika = "test3.mp3"
+
+    mixer.music.load(mazika)
     # Setting the volume
     mixer.music.set_volume(0.1)
     # Start playing the song
@@ -516,7 +560,7 @@ def decrypt_image(parent,im1,new_path):
     nav4.title("Echo-Tech")
     center_window(nav4, width=240, height=80)
 
-    label2 = Label(nav4, text="please wait..processing", fg="gray", anchor='w')
+    label2 = Label(nav4, text="Please wait..processing", fg="gray", anchor='w')
     label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
 
     def l():
@@ -588,7 +632,7 @@ def decrypt_image(parent,im1,new_path):
             nav.title("Echo-Tech")
             center_window(nav, width=225, height=80)
 
-            label2 = Label(nav, text="Please the resiver email address", fg="gray", anchor='w')
+            label2 = Label(nav, text="Enter the reciver email address", fg="gray", anchor='w')
             label2.grid(column=2, row=4, columnspan=4, sticky='we', padx=5, pady=2)
 
             entry2 = Entry(nav, bg="white", width=35)
@@ -684,9 +728,9 @@ def encode_tool(parent):
 
     griding(tool)
 
-    encode_label1 = Label(tool, text="Please select the file you want to encode to",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
+    encode_label1 = Label(tool, text="Select the image you want to hide text in",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
 
-    encode_label2 = Label(tool, text="Please enter the message you want to hide",fg="gray",anchor='w')
+    encode_label2 = Label(tool, text="Enter the message you want to hide",fg="gray",anchor='w')
     encode_label2.grid(column=1, row=4,columnspan=2,sticky = W)
 
 
@@ -699,7 +743,7 @@ def encode_tool(parent):
 
     new_name = Text(tool, bg="white",height = 1, width=15)
     new_name.grid(column=5, row=6, rowspan=1,sticky="w")
-    new_name_label = Label(tool, text="Please enter a name for the new image",fg="gray",anchor='w')
+    new_name_label = Label(tool, text="Enter a name for the new file",fg="gray",anchor='w')
     new_name_label.grid(column=5, row=7, columnspan=5,sticky="w")
     value = new_name
 
@@ -725,9 +769,9 @@ def decode_tool(parent):
 
     griding(tool)
 
-    decode_label1 = Label(tool, text="Please select the file you want to decode from",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
+    decode_label1 = Label(tool, text="Select the image that contain the message",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
 
-    decode_label2 = Label(tool, text="Here The message Will appear",fg="gray",anchor='w')
+    decode_label2 = Label(tool, text="Here, The message Will appear..",fg="gray",anchor='w')
     decode_label2.grid(column=1, row=4,columnspan=2,sticky = W)
 
     decode_entry2 = Text(tool, bg="white",wrap=WORD,height=8, width=30,state=DISABLED)
@@ -757,9 +801,9 @@ def en_aud_tool(parent):
 
     griding(tool)
 
-    encode_label1 = Label(tool, text="Please select the file you want to encode to",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
+    encode_label1 = Label(tool, text="Select the image you want to hide text in",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
 
-    encode_label2 = Label(tool, text="Please enter the message you want to hide",fg="gray",anchor='w')
+    encode_label2 = Label(tool, text="Enter the message you want to hide",fg="gray",anchor='w')
     encode_label2.grid(column=1, row=4,columnspan=2,sticky = W)
 
 
@@ -772,7 +816,7 @@ def en_aud_tool(parent):
 
     new_name = Text(tool, bg="white",height = 1, width=15)
     new_name.grid(column=5, row=6, rowspan=1,sticky="w")
-    new_name_label = Label(tool, text="Please enter a name for the new image",fg="gray",anchor='w')
+    new_name_label = Label(tool, text="Enter a name for the new file",fg="gray",anchor='w')
     new_name_label.grid(column=5, row=7, columnspan=5,sticky="w")
     value = new_name
 
@@ -798,7 +842,7 @@ def de_aud_tool(parent):
 
     griding(tool)
 
-    encode_label1 = Label(tool, text="Please select the file you want to decode from",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
+    encode_label1 = Label(tool, text="Select the file to reveal the message from ",fg="gray",anchor='w').grid(column=1, row=1,columnspan=2,sticky = W)
 
     encode_label2 = Label(tool, text="Here The message Will appear",fg="gray",anchor='w')
     encode_label2.grid(column=1, row=4,columnspan=2,sticky = W)
@@ -832,15 +876,15 @@ def en_img_tool(parent):
 
     griding(tool)
 
-    encode_label1 = Label(tool, text="Please select the file you want to hide", fg="gray", anchor='w')
+    encode_label1 = Label(tool, text="Select the file you want to hide", fg="gray", anchor='w')
     encode_label1.grid(column=1, row=1, columnspan=2, sticky=W)
 
-    encode_label2 = Label(tool, text="Please select the file you want to encode to",fg="gray",anchor='w')
+    encode_label2 = Label(tool, text="Select the image you want to hide text in",fg="gray",anchor='w')
     encode_label2.grid(column=4, row=1,columnspan=2,sticky = W)
 
     new_name = Text(tool, bg="white", height=1, width=15)
     new_name.grid(column=7, row=2, rowspan=1, sticky="w")
-    new_name_label = Label(tool, text="Please enter a name for the new image", fg="gray", anchor='w')
+    new_name_label = Label(tool, text="Enter a name for the new file", fg="gray", anchor='w')
     new_name_label.grid(column=7, row=1, columnspan=5, sticky="w")
     value = new_name
 
@@ -876,7 +920,7 @@ def de_img_tool(parent):
 
     griding(tool)
 
-    encode_label1 = Label(tool, text="Please select the image you extract from", fg="gray", anchor='w')
+    encode_label1 = Label(tool, text="Select the image you will extract from", fg="gray", anchor='w')
     encode_label1.grid(column=1, row=1, columnspan=2, sticky=W)
 
 
@@ -885,7 +929,7 @@ def de_img_tool(parent):
 
     new_name = Text(tool, bg="white", height=1, width=15)
     new_name.grid(column=7, row=2, rowspan=1, sticky="w")
-    new_name_label = Label(tool, text="Please enter a name for the new image", fg="gray", anchor='w')
+    new_name_label = Label(tool, text="Enter a name for the new file", fg="gray", anchor='w')
     new_name_label.grid(column=7, row=1, columnspan=5, sticky="w")
 
     def get_new():
@@ -938,7 +982,7 @@ def fileDailog(parent,big,small):
         nav.title("Echo-Tech")
         center_window(nav,width=200, height=70)
 
-        label2 = Label(nav, text="Please Insert a key of your choice", fg="gray", anchor='w')
+        label2 = Label(nav, text="Insert a key of your choice", fg="gray", anchor='w')
         label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
 
         entry2 = Entry(nav, bg="white", show="*", width=10)
@@ -983,7 +1027,7 @@ def fileDailog2(parent,big):
         nav2.title("Echo-Tech")
         center_window(nav2, width=200, height=70)
 
-        label2 = Label(nav2, text="Please Provide the secret key...", fg="gray", anchor='w')
+        label2 = Label(nav2, text="Provide the secret key...", fg="gray", anchor='w')
         label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
 
         entry2 = Entry(nav2, bg="white", show="*", width=10)
@@ -1036,10 +1080,12 @@ def fileDailog3(parent,big,small):
     def resume():
         mixer.music.unpause()
 
-    Label(frame, text="Welcome to music player").grid(row=1, column=1, columnspan=2)
-    Button(frame,text="Play", command=play).grid(row=2, column=1)
-    Button(frame,text="Pause", command=pause).grid(row=2, column=2)
-    Button(frame,text="Resume", command=resume).grid(row=2, column=3)
+
+    lll1 = Label(frame, text="Feel free to check the right track here").grid(row=2, column=1, columnspan=3)
+    Label(frame, text="                                       ").grid(row=3, column=1, columnspan=3,rowspan=1)
+    bbb1 =Button(frame,image=start_bu_img, command=play).grid(row=4, column=1)
+    bbb2 =Button(frame,image=pause_bu_img, command=pause).grid(row=4, column=2)
+    bbb3 =Button(frame,image=resume_bu_img, command=resume).grid(row=4, column=3)
 
 
     def get_new():
@@ -1059,7 +1105,7 @@ def fileDailog3(parent,big,small):
         nav.title("Echo-Tech")
         center_window(nav,width=200, height=70)
 
-        label2 = Label(nav, text="Please Insert a key of your choice", fg="gray", anchor='w')
+        label2 = Label(nav, text="Insert a key of your choice", fg="gray", anchor='w')
         label2.grid(column=1, row=4, columnspan=2, sticky='we', padx=5, pady=2)
 
         entry2 = Entry(nav, bg="white", show="*", width=10)
@@ -1103,10 +1149,11 @@ def fileDailog4(parent,big):
     def resume():
         mixer.music.unpause()
 
-    Label(frame, text="Welcome to music player").grid(row=1, column=1, columnspan=2)
-    Button(frame,text="Play", command=play).grid(row=2, column=1)
-    Button(frame,text="Pause", command=pause).grid(row=2, column=2)
-    Button(frame,text="Resume", command=resume).grid(row=2, column=3)
+    lll1 = Label(frame, text="Feel free to check the right track here").grid(row=2, column=1, columnspan=3)
+    Label(frame, text="                                       ").grid(row=3, column=1, columnspan=3,rowspan=1)
+    bbb1 =Button(frame,image=start_bu_img, command=play).grid(row=4, column=1)
+    bbb2 =Button(frame,image=pause_bu_img, command=pause).grid(row=4, column=2)
+    bbb3 =Button(frame,image=resume_bu_img, command=resume).grid(row=4, column=3)
 
     def provide(textelement):
 
@@ -1178,43 +1225,103 @@ def fileDailog6im(parent,cc):
     pathfinder_label2.configure(text=fileName,anchor='w')
 
 window=Tk()
+window['background'] = 'black'
+window.title("@Echo-Tech")
+center_window(window, width=913, height=502)
+window.wm_iconbitmap('./assets/logo.ico')
+immakilldisguy = "./assets/bg1.png"
+canva = tk.Canvas(window, width=910, height=500)
+imagez = ImageTk.PhotoImage(file=immakilldisguy)
+canva.create_image(0, 0, image=imagez, anchor=NW)
+canva.create_rectangle(0, 0, 100, 40)
+canva.grid(column=0, row=0, columnspan=13, rowspan=13)
+window.resizable(False, False)
 
-window.title("Echo-Tech")
-center_window(window,width=550, height=320)
 
-griding(window)
+def about_us(parent):
+    parent.withdraw()
+    level = Toplevel()
+    level.title("About Us")
+    center_window(level, width=825, height=380)
+    level.wm_iconbitmap('./assets/logo.ico')
+    # griding(level)
+    level['background'] = 'grey'
+    Omar = PhotoImage(file=r"./assets/omarzain.png")
+    omar_x = Omar.subsample(3, 3)
+    Diana = PhotoImage(file=r"./assets/diana.png")
+    diana_x = Diana.subsample(3, 3)
+    Hadi = PhotoImage(file=r"./assets/hadi.png")
+    hadi_x = Hadi.subsample(3, 3)
+    Aya = PhotoImage(file=r"./assets/aya.png")
+    aya_x = Aya.subsample(3, 3)
+    omar_pic = Label(level, text="Omar Zain \n I'm a Software Developer", image=omar_x, relief="raised", borderwidth=9,
+                     compound=TOP, fg="black").grid(column=1, row=1, padx="8", pady=40)
+    diana_pic = Label(level, text="Diana Alshafie\n I'm a Software Developer", image=diana_x, relief="raised",
+                      borderwidth=9, compound=TOP, fg="black").grid(column=2, row=1, padx="8", pady=40)
+    hadi_pic = Label(level, text="Hadi Aji \n I'm a Software Developer", image=hadi_x, compound=TOP, fg="black",
+                     relief="raised", borderwidth=9).grid(column=3, row=1, padx="8", pady=40)
+    aya_pic = Label(level, text="Aya Rashed \n I'm a Software Developer", image=aya_x, compound=TOP, fg="black",
+                    relief="raised", borderwidth=9).grid(column=4, row=1, padx="8", pady=40)
+    Echo_Tech = Label(level, text="Echo Tech Team", font='Helvetica 25 bold', fg="black").grid(column=2, row=2,
+                                                                                               rowspan="20",
+                                                                                               columnspan=2)
+    def on_closing():
+        level.destroy()
+        parent.deiconify()
+    level.protocol("WM_DELETE_WINDOW", on_closing)
+    level.mainloop()
 
-label1 = Label(window,text= "Welcome To Monalisa", fg="gray",font=('Bahnschrift SemiBold SemiConden',15))
-label1.grid(column=5,row=0)
+start_bu = PhotoImage(file= r"./assets/starti.png")
+start_bu_img = start_bu.subsample(3, 3)
 
-encode_button = Button(window, text="Hide A Message" , fg="black",command= lambda: encode_tool(parent=window))
-encode_button.grid(column=1,row=2)
-encode_label = Label(window,text= "Press here to hide \n a message of your choice in\n the media you select", fg="gray")
-encode_label.grid(column=1,row=3)
+pause_bu = PhotoImage(file= r"./assets/pause.png")
+pause_bu_img = pause_bu.subsample(3, 3)
 
-decode_button = Button(window, text="Reveal A Message" , fg="black",command= lambda: decode_tool(parent=window))
-decode_button.grid(column=1,row=5)
-decode_label = Label(window,text= "Press here to reveal \n a message hidden in a\n media you select\n (If it exist)", fg="gray")
-decode_label.grid(column=1,row=6)
+resume_bu = PhotoImage(file= r"./assets/resume.png")
+resume_bu_img = resume_bu.subsample(3, 3)
 
-encodea_button = Button(window, text="Hide A Message in audio" , fg="black",command= lambda: en_aud_tool(parent=window))
-encodea_button.grid(column=4,row=2)
-encodea_label = Label(window,text= "Press here to hide \n a message of your choice in\n the media you select", fg="gray")
-encodea_label.grid(column=4,row=3)
 
-decodea_button = Button(window, text="Reveal A Message from audio" , fg="black",command= lambda: de_aud_tool(parent=window))
-decodea_button.grid(column=4,row=5)
-decodea_label = Label(window,text= "Press here to reveal \n a message hidden in a\n media you select\n (If it exist)", fg="gray")
-decodea_label.grid(column=4,row=6)
 
-encode_img_button = Button(window, text="Hide An image in an image" , fg="black",command= lambda: en_img_tool(parent=window))
-encode_img_button.grid(column=7,row=2)
-encode_img_label = Label(window,text= "Press here to hide \n a message of your choice in\n the media you select", fg="gray")
-encode_img_label.grid(column=7,row=3)
+about = PhotoImage(file=r"./assets/aboutus.png")
+aboutUS = about.subsample(5, 7)
 
-decode_img_button = Button(window, text="Reveal an image from image" , fg="black",command= lambda: de_img_tool(parent=window))
-decode_img_button.grid(column=7,row=5)
-decode_img_label = Label(window,text= "Press here to reveal \n a message hidden in a\n media you select\n (If it exist)", fg="gray")
-decode_img_label.grid(column=7,row=6)
+imim = PhotoImage(file=r"./assets/text0.png")
+lock = imim.subsample(9, 12)
+
+imim2 = PhotoImage(file=r"./assets/text1.png")
+unlock = imim2.subsample(9, 12)
+
+pip1 = PhotoImage(file=r"./assets/pip1.png")
+pips1 = pip1.subsample(8, 9)
+
+pip2 = PhotoImage(file=r"./assets/pip2.png")
+pips2 = pip2.subsample(8, 9)
+
+imim3 = PhotoImage(file=r"./assets/audio_lock.png")
+Audio_1 = imim3.subsample(7, 12)
+
+imim4 = PhotoImage(file=r"./assets/audio_unlock.png")
+Audio_2 = imim4.subsample(7, 12)
+
+encode_button = Button(window, text="Hide A Message \n inside image", image=lock, compound=LEFT, fg="black",relief="flat", borderwidth=5, font='Helvetica 9 bold',command=lambda: encode_tool(parent=window))
+encode_button.grid(column=1, row=2)
+
+decode_button = Button(window, text="Reveal A Hidden \n Message", image=unlock, compound=LEFT, fg="black",relief="flat", borderwidth=5, font='Helvetica 9 bold',command=lambda: decode_tool(parent=window))
+decode_button.grid(column=3, row=2)
+
+encode_audio_o = Button(window, text="Hide a Text \n inside audio ", image=Audio_1, compound=LEFT, fg="black",relief="flat", borderwidth=5, font='Helvetica 9 bold',command=lambda: en_aud_tool(parent=window))
+encode_audio_o.grid(column=1, row=3, pady=40)
+
+decode_audio2 = Button(window, text="Reveal a text \n from audio", image=Audio_2, compound=LEFT, fg="black",relief="flat", borderwidth=5, font='Helvetica 9 bold',command=lambda: de_aud_tool(parent=window))
+decode_audio2.grid(column=3, row=3, pady=40)
+
+encode_pip = Button(window, text="Hide picture \n inside picture ", image=pips1, compound=LEFT, fg="black",relief="flat", borderwidth=5, font='Helvetica 9 bold',command=lambda: en_img_tool(parent=window))
+encode_pip.grid(column=1, row=5)
+
+decode_pip = Button(window, text="Reveal a picture \n from picture", image=pips2, compound=LEFT, fg="black",relief="flat", borderwidth=3, font='Helvetica 9 bold',command=lambda: de_img_tool(parent=window))
+decode_pip.grid(column=3, row=5)
+
+about_us = Button(window, image=aboutUS, compound=LEFT, fg="black", relief="flat", borderwidth=6,command=lambda: about_us(parent=window))
+about_us.grid(column=1, row=10, columnspan=1, ipadx=8)
 
 window.mainloop()
