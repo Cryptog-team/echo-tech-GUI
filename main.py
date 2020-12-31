@@ -227,13 +227,13 @@ def decode_text(path,textelement,key):
     # Starting the mixer
     mixer.init()
     # Loading the song
-    mazika = 0
+    mazika = "test.mp3"
 
     if random.randint(1, 3) == 1:
         mazika = "test.mp3"
-    if random.randint(1, 3) == 2:
+    elif random.randint(1, 3) == 2:
         mazika = "test2.mp3"
-    if random.randint(1, 3) == 3:
+    elif random.randint(1, 3) == 3:
         mazika = "test3.mp3"
 
     mixer.music.load(mazika)
@@ -354,13 +354,13 @@ def decode_audio(path,textelement,key):
     # Starting the mixer
     mixer.init()
     # Loading the song
-    mazika = 0
+    mazika = "test.mp3"
 
     if random.randint(1, 3) == 1:
         mazika = "test.mp3"
-    if random.randint(1, 3) == 2:
+    elif random.randint(1, 3) == 2:
         mazika = "test2.mp3"
-    if random.randint(1, 3) == 3:
+    elif random.randint(1, 3) == 3:
         mazika = "test3.mp3"
 
     mixer.music.load(mazika)
@@ -413,13 +413,13 @@ def encrypt_image(parent,im1,im2,new_path):
     # Starting the mixer
     mixer.init()
     # Loading the song
-    mazika = 0
+    mazika = "test.mp3"
 
     if random.randint(1, 3) == 1:
         mazika = "test.mp3"
-    if random.randint(1, 3) == 2:
+    elif random.randint(1, 3) == 2:
         mazika = "test2.mp3"
-    if random.randint(1, 3) == 3:
+    elif random.randint(1, 3) == 3:
         mazika = "test3.mp3"
 
     mixer.music.load(mazika)
@@ -541,13 +541,13 @@ def decrypt_image(parent,im1,new_path):
     # Starting the mixer
     mixer.init()
     # Loading the song
-    mazika = 0
+    mazika = "test.mp3"
 
     if random.randint(1, 3) == 1:
         mazika = "test.mp3"
-    if random.randint(1, 3) == 2:
+    elif random.randint(1, 3) == 2:
         mazika = "test2.mp3"
-    if random.randint(1, 3) == 3:
+    elif random.randint(1, 3) == 3:
         mazika = "test3.mp3"
 
     mixer.music.load(mazika)
@@ -1321,7 +1321,7 @@ encode_pip.grid(column=1, row=5)
 decode_pip = Button(window, text="Reveal a picture \n from picture", image=pips2, compound=LEFT, fg="black",relief="flat", borderwidth=3, font='Helvetica 9 bold',command=lambda: de_img_tool(parent=window))
 decode_pip.grid(column=3, row=5)
 
-about_us = Button(window, image=aboutUS, compound=LEFT, fg="black", relief="flat", borderwidth=6,command=lambda: about_us(parent=window))
-about_us.grid(column=1, row=10, columnspan=1, ipadx=8)
+about_us_bu = Button(window, image=aboutUS, compound=LEFT, fg="black", relief="flat", borderwidth=6,command=lambda: about_us(parent=window))
+about_us_bu.grid(column=1, row=10, columnspan=1, ipadx=8)
 
 window.mainloop()
